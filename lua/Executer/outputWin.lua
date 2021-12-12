@@ -25,7 +25,7 @@ local conf = {
       {name = 'filetype', val = 'Executer'}
     },
     mappings = {
-      { key = "q", cb = "<cmd>bdelete<cr>" },
+      { key = "q", cb = "<cmd>bdelete!Executer<cr>" },
     }
 }
 
