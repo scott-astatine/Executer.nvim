@@ -1,7 +1,7 @@
 local M = {}
-M.dCMD = require('Executer.lua.defaultCMD')
-local stId = require('Executer.lua.identifiers')
-local outputWin = require('Executer.lua.outputWin')
+M.dCMD = require('Executer.defaultCMD')
+local stId = require('Executer.identifiers')
+local outputWin = require('Executer.outputWin')
 local cFcmd = {}
 local singleFrun = false
 
