@@ -1,7 +1,7 @@
 local M = {}
-M.dCMD = require('Executer.defaultCMD')
-local stId = require('Executer.identifiers')
-local outputWin = require('Executer.outputWin')
+M.dCMD = require('Executer.lua.defaultCMD')
+local stId = require('Executer.lua.identifiers')
+local outputWin = require('Executer.lua.outputWin')
 local cFcmd = {}
 local singleFrun = false
 
@@ -70,6 +70,7 @@ M.setup = function ()
     end
   else
     local dirList = walkDir(vim.fn.getcwd())
+    local bufname = vim.fn.bufname(vim.fn.bufnr())
     local function dListhas(str)
       if dirList:match(str) then
         return true
@@ -90,35 +91,33 @@ M.setup = function ()
       vim.g.pExeCMD = 'yarn'
     elseif dListhas(stId.npm) then
       vim.g.pExeCMD = 'npm'
-    elseif dListhas(stId.javascript) then
+    elseif dListhas(stId.javascript) or bufname:match(stId.javascript) then
       singleFrun = true
       vim.g.pExeCMD = 'node'
 
     -- Cmake Config
     elseif dListhas(stId.cmake) then
       vim.g.pExeCMD = 'cmake'
-    elseif dListhas(stId.cpp) then
+    elseif dListhas(stId.cpp) or bufname:match(stId.cpp) then
       singleFrun = true
       vim.g.pExeCMD = 'cpp'
-    elseif dListhas(stId.lua) then
+    elseif dListhas(stId.lua) or bufname:match(stId.lua) then
       singleFrun = true
       vim.g.pExeCMD = 'lua'
 
     -- Nim & Nimble config
     elseif dListhas(stId.nimble) then
       vim.g.pExeCMD = 'nimble'
-    elseif dListhas(stId.nim) then
+    elseif dListhas(stId.nim) or bufname:match(stId.nim) then
       singleFrun = true
       vim.g.pExeCMD = 'nimc'
 
     -- Python
     elseif dListhas(stId.django) then
       vim.g.pExeCMD = 'django'
-    elseif dListhas(stId.python) then
+    elseif dListhas(stId.python) or bufname:match(stId.nim) then
       singleFrun = true
       vim.g.pExeCMD = 'python'
-    else
-      print("Could not determine which language or package manager you're using!\nDefine `cmd` run, build cmd in `.ExecuterConf.json file")
     end
   end
 end
@@ -134,7 +133,7 @@ M.runProject = function ()
       local exe = M.dCMD(vim.g.projectName)[vim.g.pExeCMD].run
       outputWin(exe)
     else
-      print("Project run cmd not configured!")
+      print("Could not determine what language or project manager you're using!\nDefine `cmd` run, build cmd in `.ExecuterConf.json file")
     end
   end
 end
