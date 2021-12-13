@@ -5,7 +5,6 @@ local function DefaultCMD(projectName, fileName)
     cargo = {
       run = "cargo run",
       build = "cargo build",
-      fmt = "cargo fmt"
     },
     rustc = {
       run = "rustc -c " .. fileN .. " -o /tmp/" .. fileN .. " && /tmp/" .. fileN,
