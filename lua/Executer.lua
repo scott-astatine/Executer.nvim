@@ -154,7 +154,13 @@ M.buildProject = function ()
       local file = function ()
         if runfileName then return runfileName else return vim.fn.expand("%:p:~:h") end
       end
-      outputWin(M.dCMD(vim.g.projectName, file)[vim.g.pExeCMD].compile)
+      local compileC = M.dCMD(vim.g.projectName, file())[vim.g.pExeCMD].compile
+      local runC = M.dCMD(vim.g.projectName, file())[vim.g.pExeCMD].run
+      if compileC then
+        outputWin(compileC)
+      elseif runC then
+        outputWin(runC)
+      end
     elseif vim.g.projectName then
       outputWin(M.dCMD(vim.g.projectName)[vim.g.pExeCMD].build)
     else
