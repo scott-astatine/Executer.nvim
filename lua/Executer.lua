@@ -27,7 +27,7 @@ M.generateConfig = function ()
   M.setup()
   local c = {
     projectName = vim.g.projectName or '',
-    cmd = M.dCMD(vim.g.projectName, runfileName)[vim.g.pExeCMD] or {
+    cmd = M.dCMD(vim.g.projectName, runfileName)[vim.g.execType] or {
       run = "",
       build = ""
     }
@@ -81,50 +81,20 @@ M.setup = function ()
       end
     end
 
-    -- Rust Cargo Config
-    if dListhas(stId.cargo) then
-      vim.g.pExeCMD = 'cargo'
-    elseif dListhas(stId.rustc) then
-      singleFrun = true
-      vim.g.pExeCMD = 'rustc'
-
-    -- Yarn, Npm, & Node config
-    elseif dListhas(stId.yarn) then
-      vim.g.pExeCMD = 'yarn'
-    elseif dListhas(stId.npm) then
-      vim.g.pExeCMD = 'npm'
-    elseif dListhas(stId.javascript) or bufname:match(stId.javascript) then
-      singleFrun = true
-      vim.g.pExeCMD = 'node'
-      runfileName = bufname
-
-    -- Cmake Config
-    elseif dListhas(stId.cmake) then
-      vim.g.pExeCMD = 'cmake'
-    elseif dListhas(stId.cpp) or bufname:match(stId.cpp) then
-      singleFrun = true
-      vim.g.pExeCMD = 'cpp'
-      runfileName = bufname
-    elseif dListhas(stId.lua) or bufname:match(stId.lua) then
-      singleFrun = true
-      vim.g.pExeCMD = 'lua'
-      runfileName = bufname
-
-    -- Nim & Nimble config
-    elseif dListhas(stId.nimble) then
-      vim.g.pExeCMD = 'nimble'
-    elseif dListhas(stId.nim) or bufname:match(stId.nim) then
-      singleFrun = true
-      vim.g.pExeCMD = 'nimc'
-      runfileName = bufname
-
-    -- Python
-    elseif dListhas(stId.django) then
-      vim.g.pExeCMD = 'django'
-    elseif dListhas(stId.python) or bufname:match(stId.nim) then
-      singleFrun = true
-      vim.g.pExeCMD = 'python'
-      runfileName = bufname
+    for _, v in pairs(stId) do
+      if v.projM then
+        if dListhas(v.files) then
+          vim.g.execType = v.execType
+          break
+        end
+      else
+        if dListhas(v.files) or bufname:match(v.files) then
+          singleFrun = true
+          vim.g.execType = v.execType
+          runfileName = bufname
+          break
+        end
+      end
     end
   end
 end
@@ -135,9 +105,9 @@ M.runProject = function ()
     outputWin(cFcmd.run)
   else
     if singleFrun then
-      outputWin(M.dCMD(vim.g.projectName, vim.fn.bufname())[vim.g.pExeCMD].run)
-    elseif vim.g.pExeCMD then
-      local exe = M.dCMD(vim.g.projectName)[vim.g.pExeCMD].run
+      outputWin(M.dCMD(vim.g.projectName, runfileName)[vim.g.execType].run)
+    elseif vim.g.execType then
+      local exe = M.dCMD(vim.g.projectName)[vim.g.execType].run
       outputWin(exe)
     else
       print("Could not determine what language or project manager you're using!\nDefine `cmd` run, build cmd in `.ExecuterConf.json file")
@@ -154,15 +124,15 @@ M.buildProject = function ()
       local file = function ()
         if runfileName then return runfileName else return vim.fn.expand("%:p:~:h") end
       end
-      local compileC = M.dCMD(vim.g.projectName, file())[vim.g.pExeCMD].compile
-      local runC = M.dCMD(vim.g.projectName, file())[vim.g.pExeCMD].run
+      local compileC = M.dCMD(vim.g.projectName, file())[vim.g.execType].compile
+      local runC = M.dCMD(vim.g.projectName, file())[vim.g.execType].run
       if compileC then
         outputWin(compileC)
       elseif runC then
         outputWin(runC)
       end
-    elseif vim.g.projectName then
-      outputWin(M.dCMD(vim.g.projectName)[vim.g.pExeCMD].build)
+    elseif vim.g.execType then
+      outputWin(M.dCMD(vim.g.projectName)[vim.g.execType].build)
     else
       print("Project build cmd not configured!")
     end

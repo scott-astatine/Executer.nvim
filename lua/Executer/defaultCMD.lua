@@ -7,34 +7,43 @@ local function DefaultCMD(projectName, fileName)
       build = "cargo build",
     },
     rustc = {
-      run = "rustc -c " .. fileN .. " -o /tmp/" .. fileN .. " && /tmp/" .. fileN,
-      compile = "rustc -c " .. fileN .. " -o /tmp/" .. fileN,
-
+      run = "rustc -c " .. fileN .. " -o " .. fileN .. "-out"  .. " && " .. fileN,
+      compile = "rustc -c " .. fileN .. " -o " .. fileN .. "-out" ,
     },
     nimble = {
       run = "nimble run",
       build = "nimble build"
     },
     nimc = {
-      run = "nimc -c " .. fileN .. " -o /tmp/" .. fileN .. " && /tmp/" .. fileN,
-      compile = "nimc -c " .. fileN .. " -o /tmp/" .. fileN,
-
+      run = "nimc -c " .. fileN .. " -o " .. fileN  .. "-out".. " && " .. fileN,
+      compile = "nimc -c " .. fileN .. " -o " .. fileN .. "-out",
     },
     cmake = {
-      run = [[cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -B build/ -S ./ && ninja -C build/ && ./build/]] .. projectN,
+      run = "cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -B build/ -S ./ && ninja -C build/ && ./build/" .. projectN,
       build = "cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -B build/ -S ./ && ninja -C build/",
     },
+    make = {
+      run = "make . &&" .. projectN,
+      build = "make .",
+    },
     cpp = {
-      run = "gcc -c " .. fileN .. " -o /tmp/" .. fileN .. " && /tmp/" .. fileN,
-      compile = "gcc -c " .. fileN .. " -o /tmp/" .. fileN,
-
+      run = "g++ " .. fileN .. " -o " .. fileN .. "-out && " .. fileN .. "-out",
+      compile = "g++ " .. fileN .. " -o " .. fileN .. "-out" ,
+    },
+    flutter = {
+      run = "flutter run",
+      build = "flutter build"
+    },
+    dart = {
+      run = "dart " .. fileN .. " " .. fileN .. " && " .. fileN,
+      compile = "dart -c " .. fileN .. " -o " .. fileN,
     },
     yarn = {
-      run = "yarn dev",
+      run = "yarn start",
       build = "yarn build"
     },
     npm = {
-      run = "npm run dev",
+      run = "npm run start",
       build = "npm run build"
     },
     django = {
@@ -43,7 +52,7 @@ local function DefaultCMD(projectName, fileName)
     python = {
       run = "python " .. fileN
     },
-    node = {
+    javascript = {
       run = "node " .. fileN
     },
     lua = {
