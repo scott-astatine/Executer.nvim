@@ -24,15 +24,19 @@ local M = {
     execType = "cpp",
     files = "%.cpp",
     projM = false,
-    compile = true
   },
-  {
+ {
+    execType = "cpp",
+    files = "%.c",
+    projM = false,
+  },
+ {
     execType = "nimble",
     files = "%.nimble",
     projM = true
   },
   {
-    execType = "nim",
+    execType = "nimc",
     files  = "%.nim",
     projM = false
   },

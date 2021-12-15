@@ -1,4 +1,4 @@
-local a = vim.api
+local api = vim.api
 
 local conf = {
     bufnr = nil,
@@ -30,33 +30,33 @@ local conf = {
 }
 
 local function bufConf()
-    for _, bn in ipairs(a.nvim_list_bufs()) do
+    for _, bn in ipairs(api.nvim_list_bufs()) do
       if vim.fn.bufname(bn) == "Executer" then
-        pcall(a.nvim_buf_delete, bn, { force = true })
+        pcall(api.nvim_buf_delete, bn, { force = true })
       end
     end
 
     conf.bufnr = vim.fn.bufnr()
-    a.nvim_buf_set_name(conf.bufnr, 'Executer')
+    api.nvim_buf_set_name(conf.bufnr, 'Executer')
 
     for _, opt in ipairs(conf.bufopts) do
       vim.bo[conf.bufnr][opt.name] = opt.val
     end
 
     for _, b in pairs(conf.mappings) do
-      a.nvim_buf_set_keymap(conf.bufnr, b.mode or 'n', b.key, b.cb, {noremap = true, silent = true, nowait = true})
+      api.nvim_buf_set_keymap(conf.bufnr, b.mode or 'n', b.key, b.cb, {noremap = true, silent = true, nowait = true})
     end
     return conf.bufnr
 end
 
 local function execWin(cmd)
-  a.nvim_command('sp term://' .. cmd)
+  api.nvim_command('sp term://' .. cmd)
   bufConf()
-  a.nvim_command("resize 10")
+  api.nvim_command("resize 10")
   for k, v in pairs(conf.winopts) do
     vim.wo[k] = v
   end
-  a.nvim_command("wincmd p")
+  api.nvim_command("wincmd p")
 end
 
 return execWin

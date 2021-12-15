@@ -15,8 +15,8 @@ local function DefaultCMD(projectName, fileName)
       build = "nimble build"
     },
     nimc = {
-      run = "nimc -c " .. fileN .. " -o " .. fileN  .. "-out".. " && " .. fileN,
-      compile = "nimc -c " .. fileN .. " -o " .. fileN .. "-out",
+      run = "nim c -r " .. fileN,
+      compile = "nim c " .. fileN
     },
     cmake = {
       run = "cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -B build/ -S ./ && ninja -C build/ && ./build/" .. projectN,
