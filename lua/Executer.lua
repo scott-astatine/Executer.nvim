@@ -23,6 +23,7 @@ local function loadConfig(path)
   end
 end
 
+-- Generate config with default config structure
 M.generateConfig = function ()
   M.setup()
   local c = {
@@ -42,6 +43,7 @@ M.generateConfig = function ()
   end
 end
 
+-- Returns a string containing space separated items
 local function walkDir(directory)
     local t, popen = "", io.popen
     local pfile = popen('ls "'..directory..'"')
@@ -52,6 +54,7 @@ local function walkDir(directory)
     return t
 end
 
+-- Gets config for current project
 M.setup = function ()
   local findfile = function (file)
     if vim.fn.findfile(file, ';') ~= '' then
@@ -99,6 +102,7 @@ M.setup = function ()
   end
 end
 
+-- Runs the project
 M.runProject = function ()
   M.setup()
   if cFcmd.run then
@@ -115,20 +119,18 @@ M.runProject = function ()
   end
 end
 
+-- Builds the project
 M.buildProject = function ()
   M.setup()
   if cFcmd.build then
     outputWin(cFcmd.build)
   else
     if singleFrun then
-      local file = function ()
-        if runfileName then return runfileName else return vim.fn.expand("%:p:~:h") end
-      end
-      local compileC = M.dCMD(vim.g.projectName, file())[vim.g.execType].compile
-      local runC = M.dCMD(vim.g.projectName, file())[vim.g.execType].run
+      local compileC = M.dCMD(vim.g.projectName, runfileName)[vim.g.execType].compile
+      local runC = M.dCMD(vim.g.projectName, runfileName)[vim.g.execType].run
       if compileC then
         outputWin(compileC)
-      elseif runC then
+      else
         outputWin(runC)
       end
     elseif vim.g.execType then
